@@ -1,4 +1,4 @@
-# 📇 Gestor de Contactos - Express & Sequelize
+# 📇 Blog - Java & SpringBoot
 
 Este proyecto es una aplicación web para la gestión de contactos (CRUD) con sistema de usuarios e inicio de sesión. Está construida desde cero utilizando el patrón de diseño **MVC (Modelo-Vista-Controlador)**.
 
