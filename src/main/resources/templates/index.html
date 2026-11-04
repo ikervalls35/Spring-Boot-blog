@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhotographItem-Responsive Theme</title>
+
+  <!-- Bootstrap core css -->
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}">
+  <!-- Custom style css -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+  <!-- Magnific-popup css -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/magnific-popup.css}">
+  <!-- Font Awesome icons -->
+  <link rel="stylesheet" type="text/css" th:href="@{/font-awesome/css/font-awesome.min.css}">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body id="page-top">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-fixed-top navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand page-scroll" href="#page-top">
+          <span>[PHOTO]</span>
+        </a>
+      </div>
+      <div class="collapse navbar-collapse navbar-right" id="menu">
+        <ul class="nav navbar-nav">
+          <li th:class="${activeTab == 'index'} ? 'active lien' : 'lien'"><a th:href="@{/}"><i
+                class="fa fa-home sr-icons"></i> Home</a></li>
+          <li th:class="${activeTab == 'about'} ? 'active lien' : 'lien'"><a th:href="@{/about}"><i
+                class="fa fa-bookmark sr-icons"></i> About</a></li>
+          <li th:class="${activeTab == 'blog'} ? 'active lien' : 'lien'"><a th:href="@{/blog}"><i
+                class="fa fa-file-text sr-icons"></i> Blog</a></li>
+          <li th:class="${activeTab == 'contact'} ? 'active lien' : 'lien'"><a th:href="@{/contact}"><i
+                class="fa fa-phone-square sr-icons"></i> Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- End of Navigation Bar -->
+
+  <!-- Principal Content Start -->
+  <div id="index">
+
+    <!-- Header -->
+    <div class="row">
+      <div class="col-xs-12 intro">
+        <div class="carousel-inner">
+          <div class="item active">
+            <img class="img-responsive" th:src="@{/images/index/woman.jpg}" alt="header picture">
+          </div>
+          <div class="carousel-caption">
+            <h1>FIND NICE PICTURES HERE</h1>
+            <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="index-body">
+      <!-- Pictures Navigation table -->
+      <div class="table-responsive">
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <td><a class="link active" href="#category1" data-toggle="tab">category I</a></td>
+              <td><a class="link" href="#category2" data-toggle="tab">category II</a></td>
+              <td><a class="link" href="#category3" data-toggle="tab">category III</a></td>
+            </tr>
+          </thead>
+        </table>
+        <hr>
+      </div>
+
+      <!-- Navigation Table Content -->
+      <div class="tab-content">
+
+        <!-- First Category pictures -->
+        <div id="category1" class="tab-pane active">
+          <div class="row popup-gallery">
+            <div class="col-xs-12 col-sm-6 col-md-3">
+              <div class="sol">
+                <img class="img-responsive" th:src="@{/images/index/portfolio/1.jpg}" alt="First category picture">
+                <div class="behind">
+                  <div class="head text-center">
+                    <ul class="list-inline">
+                      <li>
+                        <a class="gallery" th:href="@{/images/index/gallery/1.jpg}" data-toggle="tooltip"
+                          data-original-title="Quick View">
+                          <i class="fa fa-eye"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
+                          <i class="fa fa-heart"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="Download">
+                          <i class="fa fa-download"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="More information">
+                          <i class="fa fa-info"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="row box-content">
+                    <ul class="list-inline text-center">
+                      <li><i class="fa fa-eye"></i> 1000</li>
+                      <li><i class="fa fa-heart"></i> 500</li>
+                      <li><i class="fa fa-download"></i> 100</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+              <div class="sol">
+                <img class="img-responsive" th:src="@{/images/index/portfolio/2.jpg}" alt="First category picture">
+                <div class="behind">
+                  <div class="head text-center">
+                    <ul class="list-inline">
+                      <li>
+                        <a class="gallery" th:href="@{/images/index/gallery/2.jpg}" data-toggle="tooltip"
+                          data-original-title="Quick View">
+                          <i class="fa fa-eye"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
+                          <i class="fa fa-heart"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="Download">
+                          <i class="fa fa-download"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="More information">
+                          <i class="fa fa-info"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="row box-content">
+                    <ul class="list-inline text-center">
+                      <li><i class="fa fa-eye"></i> 1000</li>
+                      <li><i class="fa fa-heart"></i> 500</li>
+                      <li><i class="fa fa-download"></i> 100</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+              <div class="sol">
+                <img class="img-responsive" th:src="@{/images/index/portfolio/3.jpg}" alt="First category picture">
+                <div class="behind">
+                  <div class="head text-center">
+                    <ul class="list-inline">
+                      <li>
+                        <a class="gallery" th:href="@{/images/index/gallery/3.jpg}" data-toggle="tooltip"
+                          data-original-title="Quick View">
+                          <i class="fa fa-eye"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
+                          <i class="fa fa-heart"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="Download">
+                          <i class="fa fa-download"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="More information">
+                          <i class="fa fa-info"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="row box-content">
+                    <ul class="list-inline text-center">
+                      <li><i class="fa fa-eye"></i> 1000</li>
+                      <li><i class="fa fa-heart"></i> 500</li>
+                      <li><i class="fa fa-download"></i> 100</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+              <div class="sol">
+                <img class="img-responsive" th:src="@{/images/index/portfolio/4.jpg}" alt="First category picture">
+                <div class="behind">
+                  <div class="head text-center">
+                    <ul class="list-inline">
+                      <li>
+                        <a class="gallery" th:href="@{/images/index/gallery/4.jpg}" data-toggle="tooltip"
+                          data-original-title="Quick View">
+                          <i class="fa fa-eye"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
+                          <i class="fa fa-heart"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="Download">
+                          <i class="fa fa-download"></i>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" data-toggle="tooltip" data-original-title="More information">
+                          <i class="fa fa-info"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="row box-content">
+                    <ul class="list-inline text-center">
+                      <li><i class="fa fa-eye"></i> 1000</li>
+                      <li><i class="fa fa-heart"></i> 500</li>
+                      <li><i class="fa fa-download"></i> 100</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <nav class="text-center">
+            <ul class="pagination">
+              <li class="active"><a href="#">1</a></li>
+              <li><a href="#">2</a></li>
+              <li><a href="#">3</a></li>
+              <li><a href="#" aria-label="suivant">
+                  <span aria-hidden="true">&raquo;</span>
+                </a></li>
+            </ul>
+          </nav>
+        </div>
+        <!-- End of First category pictures -->
+
+        <!-- Second category pictures (puedes replicarlo aquí si lo necesitas) -->
+        <div id="category2" class="tab-pane">
+          <!-- Contenido de la categoría 2 -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- End of Principal Content -->
+
+</body>
+
+</html>
