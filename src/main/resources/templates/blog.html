@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -34,7 +34,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand page-scroll" href="#page-top">
+        <a class="navbar-brand page-scroll" th:href="@{/}">
           <span>[PHOTO]</span>
         </a>
       </div>
@@ -48,6 +48,23 @@
                 class="fa fa-file-text sr-icons"></i> Blog</a></li>
           <li th:class="${activeTab == 'contact'} ? 'active lien' : 'lien'"><a th:href="@{/contact}"><i
                 class="fa fa-phone-square sr-icons"></i> Contact</a></li>
+
+          <!-- 5.10: Enlaces dinámicos según autenticación de usuario -->
+          <li sec:authorize="isAuthenticated()" class="lien">
+            <a th:href="@{/blog/new}"><i class="fa fa-plus-square sr-icons"></i> New post</a>
+          </li>
+          <li sec:authorize="isAuthenticated()" class="lien">
+            <form th:action="@{/logout}" method="post" id="logoutForm" style="display:none;"></form>
+            <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
+              <i class="fa fa-sign-out sr-icons"></i> <span sec:authentication="name">User</span> - Logout
+            </a>
+          </li>
+          <li sec:authorize="isAnonymous()" class="lien">
+            <a th:href="@{/register}"><i class="fa fa-user-plus sr-icons"></i> Register</a>
+          </li>
+          <li sec:authorize="isAnonymous()" class="lien">
+            <a th:href="@{/login}"><i class="fa fa-sign-in sr-icons"></i> Login</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -61,80 +78,56 @@
 
         <!-- Blocks of Posts -->
         <div class="col-xs-12 col-sm-8 row">
-          <div class="col-xs-12 col-sm-12">
+
+          <!-- Mensaje cuando se busca y no hay resultados -->
+          <div th:if="${posts == null or posts.empty}" class="col-xs-12 text-center" style="padding: 40px 0;">
+            <i class="fa fa-info-circle fa-3x text-muted"></i>
+            <h3 th:if="${searchTerm != null and !searchTerm.empty}">No se encontraron entradas para: "<span th:text="${searchTerm}"></span>"</h3>
+            <h3 th:unless="${searchTerm != null and !searchTerm.empty}">No hay entradas de blog publicadas aún.</h3>
+            <p><a th:href="@{/blog}" class="btn btn-default">Ver todas las entradas</a></p>
+          </div>
+
+          <!-- 5.5: Recorrido dinámico por todos los posts de la página -->
+          <div th:each="post : ${posts}" class="col-xs-12 col-sm-12">
             <div class="post">
               <div class="post-heading">
-                <span>6 JANUARY</span>
-                <img class="img-responsive" th:src="@{/images/blog/landscape.jpg}" alt="post's picture">
+                <span th:text="${post.formattedDate}">6 JANUARY</span>
+                <img class="img-responsive" th:src="@{'/images/blog/' + ${post.image}}" th:alt="${post.title}">
               </div>
               <div class="post-body">
-                <h3><a th:href="@{/single_post}"><strong>doloremque illum</strong></a></h3>
+                <h3><a th:href="@{'/single_post/' + ${post.slug}}"><strong th:text="${post.title}">Title</strong></a></h3>
                 <hr>
-                <p>Duis ultrices tortor non felis convallis bibendum. Maecenas diam velit, sollicitudin at imperdiet ac,
-                  consectetur non nibh. Etiam eget dapibus nulla.
-                </p>
+                <p th:text="${#strings.abbreviate(post.content, 200)}">Post content snippet...</p>
               </div>
               <div class="post-footer">
-                <a class="btn" th:href="@{/single_post}">READ MORE...</a>
+                <a class="btn" th:href="@{'/single_post/' + ${post.slug}}">READ MORE...</a>
                 <span>
-                  <i class="fa fa-heart sr-icons"></i> 10
-                  <i class="fa fa-comments sr-icons"></i> 10
+                  <i class="fa fa-heart sr-icons"></i> <span th:text="${post.numLikes}">0</span>
+                  <i class="fa fa-comments sr-icons"></i> <span th:text="${post.numComments}">0</span>
                 </span>
               </div>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-12">
-            <div class="post">
-              <div class="post-heading">
-                <span>7 FEBRUARY</span>
-                <img class="img-responsive" th:src="@{/images/blog/family.jpg}" alt="post's picture">
-              </div>
-              <div class="post-body">
-                <h3><a th:href="@{/single_post}"><strong>Lorem ipsum</strong></a></h3>
-                <hr>
-                <p>Nunc sit amet dapibus est, sit amet varius risus. Donec luctus lacinia mauris, at feugiat ligula
-                  facilisis ac. Class aptent taciti sociosqu ad litora torquent per conubia.
-                </p>
-              </div>
-              <div class="post-footer">
-                <a class="btn" th:href="@{/single_post}">READ MORE...</a>
-                <span>
-                  <i class="fa fa-heart sr-icons"></i> 10
-                  <i class="fa fa-comments sr-icons"></i> 10
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-12">
-            <div class="post">
-              <div class="post-heading">
-                <span>8 MARCH</span>
-                <img class="img-responsive" th:src="@{/images/blog/elephant.jpg}" alt="post's picture">
-              </div>
-              <div class="post-body">
-                <h3><a th:href="@{/single_post}"><strong>Aliquam soluta</strong></a></h3>
-                <hr>
-                <p>In felis ante, aliquet sit amet venenatis at, feugiat sed leo. Fusce pretium, velit in luctus ornare,
-                  elit lorem ultrices tortor, sed consectetur orci risus mollis ante.
-                </p>
-              </div>
-              <div class="post-footer">
-                <a class="btn" th:href="@{/single_post}">READ MORE...</a>
-                <span>
-                  <i class="fa fa-heart sr-icons"></i> 10
-                  <i class="fa fa-comments sr-icons"></i> 10
-                </span>
-              </div>
-            </div>
-          </div>
-          <nav class="text-left">
+
+          <!-- 5.8: Paginación dinámica -->
+          <nav class="text-left col-xs-12" th:if="${totalPages > 1}">
             <ul class="pagination">
-              <li class="active"><a href="#">1</a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#" aria-label="suivant">
+              <!-- Página anterior -->
+              <li th:class="${currentPage == 1} ? 'disabled' : ''">
+                <a th:href="${currentPage > 1} ? (${searchTerm != null && !searchTerm.empty} ? @{/blog/buscar(searchTerm=${searchTerm}, page=${currentPage - 1})} : @{'/blog/' + ${currentPage - 1}}) : '#'" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <!-- Números de páginas -->
+              <li th:each="p : ${#numbers.sequence(1, totalPages)}" th:class="${p == currentPage} ? 'active' : ''">
+                <a th:href="${searchTerm != null && !searchTerm.empty} ? @{/blog/buscar(searchTerm=${searchTerm}, page=${p})} : @{'/blog/' + ${p}}" th:text="${p}">1</a>
+              </li>
+              <!-- Página siguiente -->
+              <li th:class="${currentPage == totalPages} ? 'disabled' : ''">
+                <a th:href="${currentPage < totalPages} ? (${searchTerm != null && !searchTerm.empty} ? @{/blog/buscar(searchTerm=${searchTerm}, page=${currentPage + 1})} : @{'/blog/' + ${currentPage + 1}}) : '#'" aria-label="Next">
                   <span aria-hidden="true">&raquo;</span>
-                </a></li>
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -142,58 +135,55 @@
 
         <!-- Side bar -->
         <div class="col-xs-12 col-sm-4">
-          <form class="form-horizontal">
+          <!-- 5.11: Buscador de entradas -->
+          <form class="form-horizontal" th:action="@{/blog/buscar}" method="get">
             <div class="input-group">
-              <input class="form-control" type="text" placeholder="Research">
+              <input class="form-control" type="text" placeholder="Research" name="searchTerm" th:value="${searchTerm}">
               <span class="input-group-btn">
-                <a href="#" class="btn"><i class="fa fa-search"></i></a>
+                <button type="submit" class="btn btn-primary" aria-label="Buscar">
+                  <i class="fa fa-search"></i>
+                </button>
               </span>
             </div>
           </form>
-          <div class="panel">
+
+          <div class="panel" style="margin-top: 20px;">
             <div class="panel-heading">
               <h4>Categories</h4>
             </div>
             <div class="panel-body">
               <ul class="nav">
-                <li><a href="#">Category I</a></li>
-                <li><a href="#">Category II</a></li>
-                <li><a href="#">Category III</a></li>
-                <li><a href="#">Category IV</a></li>
-                <li class="last"><a href="#">Category V</a></li>
+                <li th:each="cat, stat : ${categories}" th:classappend="${stat.last} ? 'last' : ''">
+                  <a th:href="@{'/#category' + ${cat.id}}" th:text="${cat.name}">Category</a>
+                </li>
+                <li th:if="${categories == null or categories.empty}" class="last">
+                  <span class="text-muted">Sin categorías todavía</span>
+                </li>
               </ul>
             </div>
           </div>
+
           <div class="well">
             <h4>Soluta</h4>
             <p>Quod soluta corrupti earum officia vel inventore vitae quidem, consequuntur odit impedit.</p>
           </div>
+
+          <!-- 5.6 y RETO 6.6.1: Lista dinámica de posts recientes en el blog -->
           <h3>Recent Posts</h3>
           <hr>
-          <div class="post">
+          <div th:each="recent : ${recents}" class="post">
             <div class="post-heading">
-              <span>10 APRIL</span>
-              <img class="img-responsive" th:src="@{/images/blog/wedding.jpg}" alt="post's picture">
+              <span th:text="${recent.formattedDate}">10 APRIL</span>
+              <img class="img-responsive" th:src="@{'/images/blog/' + ${recent.image}}" th:alt="${recent.title}">
             </div>
             <div class="post-body">
               <span>
-                <i class="fa fa-heart sr-icons"></i> 10
-                <i class="fa fa-comments sr-icons"></i> 10
+                <i class="fa fa-heart sr-icons"></i> <span th:text="${recent.numLikes}">0</span>
+                <i class="fa fa-comments sr-icons"></i> <span th:text="${recent.numComments}">0</span>
               </span>
-              <h4 class="text-left"><a th:href="@{/single_post}"><strong>Aliquam soluta</strong></a></h4>
-            </div>
-          </div>
-          <div class="post">
-            <div class="post-heading">
-              <span>12 MAY</span>
-              <img class="img-responsive" th:src="@{/images/blog/woman.jpg}" alt="post's picture">
-            </div>
-            <div class="post-body">
-              <span>
-                <i class="fa fa-heart sr-icons"></i> 10
-                <i class="fa fa-comments sr-icons"></i> 10
-              </span>
-              <h4 class="text-left"><a th:href="@{/single_post}"><strong>Consequuntur</strong></a></h4>
+              <h4 class="text-left">
+                <a th:href="@{'/single_post/' + ${recent.slug}}"><strong th:text="${recent.title}">Aliquam soluta</strong></a>
+              </h4>
             </div>
           </div>
         </div>
@@ -208,12 +198,9 @@
   <footer>
     <div class="container text-muted text-center">
       <ul class="list-inline social-buttons">
-        <li><a href="#"><i class="fa fa-facebook sr-icons"></i></a>
-        </li>
-        <li><a href="#"><i class="fa fa-twitter sr-icons"></i></a>
-        </li>
-        <li><a href="#"><i class="fa fa-google-plus sr-icons"></i></a>
-        </li>
+        <li><a href="#"><i class="fa fa-facebook sr-icons"></i></a></li>
+        <li><a href="#"><i class="fa fa-twitter sr-icons"></i></a></li>
+        <li><a href="#"><i class="fa fa-google-plus sr-icons"></i></a></li>
       </ul>
       <ul class="list-inline">
         <li class="footer-number"><i class="fa fa-phone sr-icons"></i> (00228)92229954 </li>

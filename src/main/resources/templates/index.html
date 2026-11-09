@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -50,6 +50,21 @@
                 class="fa fa-file-text sr-icons"></i> Blog</a></li>
           <li th:class="${activeTab == 'contact'} ? 'active lien' : 'lien'"><a th:href="@{/contact}"><i
                 class="fa fa-phone-square sr-icons"></i> Contact</a></li>
+          <li sec:authorize="isAuthenticated()" class="lien">
+            <a th:href="@{/blog/new}"><i class="fa fa-plus-square sr-icons"></i> New post</a>
+          </li>
+          <li sec:authorize="isAuthenticated()" class="lien">
+            <form th:action="@{/logout}" method="post" id="logoutForm" style="display:none;"></form>
+            <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
+              <i class="fa fa-sign-out sr-icons"></i> <span sec:authentication="name">User</span> - Logout
+            </a>
+          </li>
+          <li sec:authorize="isAnonymous()" class="lien">
+            <a th:href="@{/register}"><i class="fa fa-user-plus sr-icons"></i> Register</a>
+          </li>
+          <li sec:authorize="isAnonymous()" class="lien">
+            <a th:href="@{/login}"><i class="fa fa-sign-in sr-icons"></i> Login</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -62,27 +77,33 @@
     <!-- Header -->
     <div class="row">
       <div class="col-xs-12 intro">
-        <div class="carousel-inner">
+        <div class="carousel-inner" th:if="${carouselImages != null and !carouselImages.empty}">
+          <div class="item" th:each="img, stat : ${carouselImages}" th:classappend="${stat.first} ? 'active' : ''">
+            <img class="img-responsive" th:src="@{${img.imageUrl}}" th:alt="${img.title}">
+          </div>
+        </div>
+        <div class="carousel-inner" th:unless="${carouselImages != null and !carouselImages.empty}">
           <div class="item active">
             <img class="img-responsive" th:src="@{/images/index/woman.jpg}" alt="header picture">
           </div>
-          <div class="carousel-caption">
-            <h1>FIND NICE PICTURES HERE</h1>
-            <hr>
-          </div>
+        </div>
+        <div class="carousel-caption">
+          <h1>FIND NICE PICTURES HERE</h1>
+          <hr>
         </div>
       </div>
     </div>
 
     <div id="index-body">
       <!-- Pictures Navigation table -->
-      <div class="table-responsive">
+      <div class="table-responsive" th:if="${categories != null and !categories.empty}">
         <table class="table text-center">
           <thead>
             <tr>
-              <td><a class="link active" href="#category1" data-toggle="tab">category I</a></td>
-              <td><a class="link" href="#category2" data-toggle="tab">category II</a></td>
-              <td><a class="link" href="#category3" data-toggle="tab">category III</a></td>
+              <td th:each="cat, stat : ${categories}">
+                <a class="link" th:classappend="${stat.first} ? 'active' : ''"
+                   th:href="@{'#category' + ${cat.id}}" data-toggle="tab" th:text="${cat.name}">category</a>
+              </td>
             </tr>
           </thead>
         </table>
@@ -90,136 +111,18 @@
       </div>
 
       <!-- Navigation Table Content -->
-      <div class="tab-content">
-
-        <!-- First Category pictures -->
-        <div id="category1" class="tab-pane active">
-          <div class="row popup-gallery">
-            <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="tab-content" th:if="${categories != null and !categories.empty}">
+        <div th:each="cat, stat : ${categories}" th:id="'category' + ${cat.id}" class="tab-pane"
+             th:classappend="${stat.first} ? 'active' : ''">
+          <div class="row popup-gallery" th:if="${cat.images != null and !cat.images.empty}">
+            <div class="col-xs-12 col-sm-6 col-md-3" th:each="img : ${cat.images}">
               <div class="sol">
-                <img class="img-responsive" th:src="@{/images/index/portfolio/1.jpg}" alt="First category picture">
+                <img class="img-responsive" th:src="@{${img.imageUrl}}" th:alt="${img.title}">
                 <div class="behind">
                   <div class="head text-center">
                     <ul class="list-inline">
                       <li>
-                        <a class="gallery" th:href="@{/images/index/gallery/1.jpg}" data-toggle="tooltip"
-                          data-original-title="Quick View">
-                          <i class="fa fa-eye"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
-                          <i class="fa fa-heart"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="tooltip" data-original-title="Download">
-                          <i class="fa fa-download"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="tooltip" data-original-title="More information">
-                          <i class="fa fa-info"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="row box-content">
-                    <ul class="list-inline text-center">
-                      <li><i class="fa fa-eye"></i> 1000</li>
-                      <li><i class="fa fa-heart"></i> 500</li>
-                      <li><i class="fa fa-download"></i> 100</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-              <div class="sol">
-                <img class="img-responsive" th:src="@{/images/index/portfolio/2.jpg}" alt="First category picture">
-                <div class="behind">
-                  <div class="head text-center">
-                    <ul class="list-inline">
-                      <li>
-                        <a class="gallery" th:href="@{/images/index/gallery/2.jpg}" data-toggle="tooltip"
-                          data-original-title="Quick View">
-                          <i class="fa fa-eye"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
-                          <i class="fa fa-heart"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="tooltip" data-original-title="Download">
-                          <i class="fa fa-download"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="tooltip" data-original-title="More information">
-                          <i class="fa fa-info"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="row box-content">
-                    <ul class="list-inline text-center">
-                      <li><i class="fa fa-eye"></i> 1000</li>
-                      <li><i class="fa fa-heart"></i> 500</li>
-                      <li><i class="fa fa-download"></i> 100</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-              <div class="sol">
-                <img class="img-responsive" th:src="@{/images/index/portfolio/3.jpg}" alt="First category picture">
-                <div class="behind">
-                  <div class="head text-center">
-                    <ul class="list-inline">
-                      <li>
-                        <a class="gallery" th:href="@{/images/index/gallery/3.jpg}" data-toggle="tooltip"
-                          data-original-title="Quick View">
-                          <i class="fa fa-eye"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="tooltip" data-original-title="Click if you like it">
-                          <i class="fa fa-heart"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="tooltip" data-original-title="Download">
-                          <i class="fa fa-download"></i>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="tooltip" data-original-title="More information">
-                          <i class="fa fa-info"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="row box-content">
-                    <ul class="list-inline text-center">
-                      <li><i class="fa fa-eye"></i> 1000</li>
-                      <li><i class="fa fa-heart"></i> 500</li>
-                      <li><i class="fa fa-download"></i> 100</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-              <div class="sol">
-                <img class="img-responsive" th:src="@{/images/index/portfolio/4.jpg}" alt="First category picture">
-                <div class="behind">
-                  <div class="head text-center">
-                    <ul class="list-inline">
-                      <li>
-                        <a class="gallery" th:href="@{/images/index/gallery/4.jpg}" data-toggle="tooltip"
+                        <a class="gallery" th:href="@{${img.imageUrl}}" data-toggle="tooltip"
                           data-original-title="Quick View">
                           <i class="fa fa-eye"></i>
                         </a>
@@ -252,24 +155,16 @@
               </div>
             </div>
           </div>
-          <nav class="text-center">
-            <ul class="pagination">
-              <li class="active"><a href="#">1</a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#" aria-label="suivant">
-                  <span aria-hidden="true">&raquo;</span>
-                </a></li>
-            </ul>
-          </nav>
+          <p class="text-center text-muted" th:if="${cat.images == null or cat.images.empty}">
+            Todavía no hay imágenes en esta categoría.
+          </p>
         </div>
-        <!-- End of First category pictures -->
+      </div>
 
-        <!-- Second category pictures (puedes replicarlo aquí si lo necesitas) -->
-        <div id="category2" class="tab-pane">
-          <!-- Contenido de la categoría 2 -->
-        </div>
-
+      <div class="text-center text-muted" th:unless="${categories != null and !categories.empty}" style="padding: 60px 15px;">
+        <i class="fa fa-picture-o fa-3x"></i>
+        <h3>Todavía no hay categorías con imágenes</h3>
+        <p>El administrador puede crear categorías y subir imágenes desde el panel de administración.</p>
       </div>
     </div>
   </div>

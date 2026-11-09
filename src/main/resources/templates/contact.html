@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 
 <head>
 	<meta charset="utf-8">
@@ -48,6 +48,21 @@
 								class="fa fa-file-text sr-icons"></i> Blog</a></li>
 					<li th:class="${activeTab == 'contact'} ? 'active lien' : 'lien'"><a th:href="@{/contact}"><i
 								class="fa fa-phone-square sr-icons"></i> Contact</a></li>
+					<li sec:authorize="isAuthenticated()" class="lien">
+						<a th:href="@{/blog/new}"><i class="fa fa-plus-square sr-icons"></i> New post</a>
+					</li>
+					<li sec:authorize="isAuthenticated()" class="lien">
+						<form th:action="@{/logout}" method="post" id="logoutForm" style="display:none;"></form>
+						<a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
+							<i class="fa fa-sign-out sr-icons"></i> <span sec:authentication="name">User</span> - Logout
+						</a>
+					</li>
+					<li sec:authorize="isAnonymous()" class="lien">
+					  <a th:href="@{/register}"><i class="fa fa-user-plus sr-icons"></i> Register</a>
+					</li>
+					<li sec:authorize="isAnonymous()" class="lien">
+						<a th:href="@{/login}"><i class="fa fa-sign-in sr-icons"></i> Login</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -61,34 +76,39 @@
 				<h1>CONTACT US</h1>
 				<hr>
 				<p>Aut eaque, laboriosam veritatis, quos non quis ad perspiciatis, totam corporis ea, alias ut unde.</p>
-				<form class="form-horizontal">
+
+				<!-- Formulario conectado por POST al controlador -->
+				<form class="form-horizontal" th:action="@{/contact}" th:object="${contactMessage}" method="POST">
+
+					<div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger" role="alert">
+						<i class="fa fa-exclamation-triangle"></i> Revisa los campos marcados en rojo.
+					</div>
+
 					<div class="form-group">
 						<div class="col-xs-6">
-							<label class="label-control">First Name</label>
-							<input class="form-control" type="text">
+							<label class="label-control" for="name">Full Name</label>
+							<input class="form-control" type="text" id="name" th:field="*{name}" required>
+							<span class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 						</div>
 						<div class="col-xs-6">
-							<label class="label-control">Last Name</label>
-							<input class="form-control" type="text">
+							<label class="label-control" for="email">Email</label>
+							<input class="form-control" type="email" id="email" th:field="*{email}" required>
+							<span class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-xs-12">
-							<label class="label-control">Email</label>
-							<input class="form-control" type="text">
+							<label class="label-control" for="subject">Subject</label>
+							<input class="form-control" type="text" id="subject" th:field="*{subject}" required>
+							<span class="field-error" th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-xs-12">
-							<label class="label-control">Subject</label>
-							<input class="form-control" type="text">
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-xs-12">
-							<label class="label-control">Message</label>
-							<textarea class="form-control"></textarea>
-							<button class="pull-right btn btn-lg sr-button">SEND</button>
+							<label class="label-control" for="message">Message</label>
+							<textarea class="form-control" id="message" th:field="*{message}" rows="5" required></textarea>
+							<span class="field-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></span>
+							<button type="submit" class="pull-right btn btn-lg sr-button">SEND</button>
 						</div>
 					</div>
 				</form>

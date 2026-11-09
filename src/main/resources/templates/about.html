@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -48,6 +48,21 @@
                 class="fa fa-file-text sr-icons"></i> Blog</a></li>
           <li th:class="${activeTab == 'contact'} ? 'active lien' : 'lien'"><a th:href="@{/contact}"><i
                 class="fa fa-phone-square sr-icons"></i> Contact</a></li>
+          <li sec:authorize="isAuthenticated()" class="lien">
+            <a th:href="@{/blog/new}"><i class="fa fa-plus-square sr-icons"></i> New post</a>
+          </li>
+          <li sec:authorize="isAuthenticated()" class="lien">
+            <form th:action="@{/logout}" method="post" id="logoutForm" style="display:none;"></form>
+            <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
+              <i class="fa fa-sign-out sr-icons"></i> <span sec:authentication="name">User</span> - Logout
+            </a>
+          </li>
+          <li sec:authorize="isAnonymous()" class="lien">
+            <a th:href="@{/register}"><i class="fa fa-user-plus sr-icons"></i> Register</a>
+          </li>
+          <li sec:authorize="isAnonymous()" class="lien">
+            <a th:href="@{/login}"><i class="fa fa-sign-in sr-icons"></i> Login</a>
+          </li>
         </ul>
       </div>
     </div>
