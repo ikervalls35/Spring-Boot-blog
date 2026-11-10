@@ -174,6 +174,23 @@
   <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
   <!-- Bootstrap Core JavaScript -->
   <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <!-- Activa la pestaña de categoría indicada en el hash de la URL (ej. /#category2 desde el sidebar del blog) -->
+  <script type="text/javascript">
+    $(function () {
+      var hash = window.location.hash;
+      if (hash && hash.indexOf('#category') === 0) {
+        var $tab = $('a[data-toggle="tab"][href="' + hash + '"]');
+        if ($tab.length) {
+          $tab.tab('show');
+          // script.js solo mueve el resaltado del enlace al hacer clic; al llegar por hash lo replicamos aquí
+          $('.table td a.active').removeClass('active');
+          $tab.addClass('active');
+          var tabs = document.querySelector('.table-responsive');
+          if (tabs) tabs.scrollIntoView();
+        }
+      }
+    });
+  </script>
   <!-- Plugin JavaScript -->
   <script type="text/javascript" th:src="@{/js/jquery.easing.min.js}"></script>
   <script type="text/javascript" th:src="@{/js/jquery.magnific-popup.min.js}"></script>
